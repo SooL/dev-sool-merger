@@ -55,12 +55,12 @@ class GroupFileSet:
 		self.merged_folder = os.path.abspath(self.merged_folder)
 
 		if not os.path.exists(self.split_folder) :
-			logger.error(f"Splited sources path {self.split_folder} does not exists")
-			raise FileNotFoundError("Splited sources path does not exists")
+			os.makedirs(self.split_folder,exist_ok=True)
+			logger.info(f"Create folder for splited sources {self.split_folder}")
 
 		if not os.path.exists(self.merged_folder) :
-			logger.error(f"Merged sources path {self.merged_folder} does not exists")
-			raise FileNotFoundError("Merged sources path does not exists")
+			os.makedirs(self.merged_folder, exist_ok=True)
+			logger.info(f"Create folder for merged sources {self.merged_folder}")
 
 	@property
 	def definition_file(self) -> str:

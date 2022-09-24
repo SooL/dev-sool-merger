@@ -47,7 +47,7 @@ parser.add_argument("--split-dir","-s",
 					required=True,
 					type=str)
 parser.add_argument("--merge-dir","-m",
-					help="Destination directory to write in. Should exists.",
+					help="Destination directory to write in.",
 					required=True,
 					type=str)
 
