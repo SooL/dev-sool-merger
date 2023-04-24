@@ -22,7 +22,7 @@
 
 import argparse
 import sys
-
+import os
 import typing as T
 import glob
 
@@ -66,8 +66,8 @@ parser.add_argument("--exclude-tags",
 runtime_args = None
 
 if __name__ == "__main__" :
-	if len(sys.argv) < 6 and runtime_args is None:
-		runtime_args = "-s testcase -m testcase/output -f TESTR --reverse".split(" ")
+	# if len(sys.argv) < 6 and runtime_args is None:
+	# 	runtime_args = "-s testcase -m testcase/output -f TESTR --reverse".split(" ")
 
 	args = parser.parse_args(runtime_args)
 
@@ -81,8 +81,12 @@ if __name__ == "__main__" :
 
 	for fpath in glob.glob(base_descr.definition_file) :
 		new_fs = GroupFileSet.from_path(fpath)
-		if new_fs.base_name not in global_fileset :
-			global_fileset[new_fs.base_name] = MergeHandler(new_fs)
+		try :
+			if new_fs.base_name not in global_fileset :
+				global_fileset[new_fs.base_name] = MergeHandler(new_fs)
+		except FileNotFoundError :
+			print(f"Some file not found for base name {new_fs.base_name}. Output not generated.")
+			
 
 	for fpath in glob.glob(base_descr.struct_file) :
 		new_fs = GroupFileSet.from_path(fpath)
