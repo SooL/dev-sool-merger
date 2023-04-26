@@ -24,19 +24,21 @@ logger = logging.getLogger()
 
 
 class GroupFileSet:
-	default_split_folder : str = "."
+	default_definition_folder : str = "."
+	default_struct_folder : str = "."
 	default_merged_folder : str = "."
 
-	def __init__(self,base_name : str,split_folder : str = None, merged_folder : str = None):
+	def __init__(self,base_name : str,definition_folder : str = None, struct_folder : str = None,  merged_folder : str = None):
 		self.base_name = base_name.replace(".h","").replace("_definition","").replace("_struct","")
-		self.split_folder = split_folder if split_folder is not None else GroupFileSet.default_split_folder
+		self.definition_folder = definition_folder if definition_folder is not None else GroupFileSet.default_definition_folder
+		self.struct_folder = struct_folder if struct_folder is not None else GroupFileSet.default_struct_folder
 		self.merged_folder = merged_folder if merged_folder is not None else GroupFileSet.default_merged_folder
 
 		self.init_folders()
 
 	def __eq__(self, other : "GroupFileSet"):
 		return  self.base_name == other.base_name and \
-				self.split_folder == other.split_folder and \
+				self.definition_folder == other.definition_folder and \
 				self.merged_folder == other.merged_folder
 
 	@classmethod
@@ -51,12 +53,17 @@ class GroupFileSet:
 
 
 	def init_folders(self):
-		self.split_folder = os.path.abspath(self.split_folder)
+		self.definition_folder = os.path.abspath(self.definition_folder)
+		self.struct_folder = os.path.abspath(self.struct_folder)
 		self.merged_folder = os.path.abspath(self.merged_folder)
 
-		if not os.path.exists(self.split_folder) :
-			os.makedirs(self.split_folder,exist_ok=True)
-			logger.info(f"Create folder for splited sources {self.split_folder}")
+		if not os.path.exists(self.definition_folder) :
+			os.makedirs(self.definition_folder,exist_ok=True)
+			logger.info(f"Create folder for splited sources {self.definition_folder}")
+
+		if not os.path.exists(self.struct_folder) :
+			os.makedirs(self.struct_folder,exist_ok=True)
+			logger.info(f"Create folder for splited sources {self.struct_folder}")
 
 		if not os.path.exists(self.merged_folder) :
 			os.makedirs(self.merged_folder, exist_ok=True)
@@ -64,11 +71,11 @@ class GroupFileSet:
 
 	@property
 	def definition_file(self) -> str:
-		return f"{self.split_folder}/{self.base_name}_definition.h"
+		return f"{self.definition_folder}/{self.base_name}_definition.h"
 
 	@property
 	def struct_file(self) -> str:
-		return f"{self.split_folder}/{self.base_name}_struct.h"
+		return f"{self.struct_folder}/{self.base_name}_struct.h"
 
 	@property
 	def merged_file(self) -> str:
